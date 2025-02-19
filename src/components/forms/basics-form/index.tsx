@@ -9,10 +9,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { BasicsFormFields, useCVStore } from "@/stores/cv-store";
-import { ImageIcon } from "lucide-react";
-import Image from "next/image";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import AvatarPicker from "./avatar-picker";
 
 const BasicsForm = () => {
   const { updateBasics, basics } = useCVStore();
@@ -37,28 +36,23 @@ const BasicsForm = () => {
         <FormField
           name="imageSrc"
           control={form.control}
+          render={() => (
+            <FormItem className="">
+              <div>
+                <AvatarPicker />
+              </div>
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="jobTitle"
+          control={form.control}
           render={({ field }) => (
-            <FormItem className="flex items-center gap-4">
-              <div className="size-20 bg-accent rounded-full flex items-center justify-center overflow-hidden">
-                {field.value ? (
-                  <Image
-                    unoptimized
-                    src={field.value}
-                    alt="Profile image"
-                    width={20}
-                    height={20}
-                    className="rounded-full size-full"
-                  />
-                ) : (
-                  <ImageIcon className="size-4" />
-                )}
-              </div>
-              <div className="flex-1">
-                <FormLabel>Image</FormLabel>
-                <FormControl>
-                  <Input className="mt-1" {...field} />
-                </FormControl>
-              </div>
+            <FormItem>
+              <FormLabel>Job Title</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
             </FormItem>
           )}
         />
@@ -88,18 +82,6 @@ const BasicsForm = () => {
             )}
           />
         </div>
-        <FormField
-          name="jobTitle"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Job Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
         <div className="grid grid-cols-2 gap-4">
           <FormField
             name="email"
@@ -114,11 +96,11 @@ const BasicsForm = () => {
             )}
           />
           <FormField
-            name="website"
+            name="phone"
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Website</FormLabel>
+                <FormLabel>Phone</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -126,6 +108,44 @@ const BasicsForm = () => {
             )}
           />
         </div>
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            name="country"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Country</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="city"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>City</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+        <FormField
+          name="website"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Website</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
       </form>
     </Form>
   );

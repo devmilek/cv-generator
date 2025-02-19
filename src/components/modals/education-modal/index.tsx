@@ -20,42 +20,42 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ExperienceEntry, useCVStore } from "@/stores/cv-store";
+import { EducationEntry, useCVStore } from "@/stores/cv-store";
 import React, { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
-import { experienceSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MonthPickerPopover from "@/components/global/month-picker-popover";
+import { educationSchema } from "./schema";
 
-const AddExperienceModal = ({
+const EducationModal = ({
   data,
   children,
 }: {
-  data?: ExperienceEntry;
+  data?: EducationEntry;
   children: ReactNode;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { addExperience, updateExperience } = useCVStore();
-  const form = useForm<z.infer<typeof experienceSchema>>({
-    resolver: zodResolver(experienceSchema),
+  const { addEducation, updateEducation } = useCVStore();
+  const form = useForm<z.infer<typeof educationSchema>>({
+    resolver: zodResolver(educationSchema),
     defaultValues: {
-      location: data?.location,
+      institution: data?.institution || "",
+      areaOfStudy: data?.areaOfStudy,
+      degree: data?.degree,
+      score: data?.score,
+      startDate: data?.startDate,
+      endDate: data?.endDate,
       summary: data?.summary,
-      website: data?.website,
-      employer: data?.employer || "",
-      jobTitle: data?.jobTitle || "",
-      startDate: data?.startDate || undefined,
-      endDate: data?.endDate || undefined,
     },
   });
 
-  const onSubmit = (values: z.infer<typeof experienceSchema>) => {
+  const onSubmit = (values: z.infer<typeof educationSchema>) => {
     if (data) {
-      updateExperience(data.id, values);
+      updateEducation(data.id, values);
     } else {
-      addExperience({
+      addEducation({
         ...values,
         id: uuid(),
       });
@@ -65,7 +65,13 @@ const AddExperienceModal = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(val) => {
+        setIsOpen(val);
+        form.reset();
+      }}
+    >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -76,11 +82,11 @@ const AddExperienceModal = ({
           <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4">
               <FormField
-                name="jobTitle"
+                name="institution"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Job Title</FormLabel>
+                    <FormLabel>Institution</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -89,11 +95,39 @@ const AddExperienceModal = ({
                 )}
               />
               <FormField
-                name="employer"
+                name="areaOfStudy"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Employer</FormLabel>
+                    <FormLabel>Area of study</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                name="degree"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Degree</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="score"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Score</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -136,35 +170,6 @@ const AddExperienceModal = ({
                 )}
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                name="location"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="website"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Website</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
             <FormField
               name="summary"
               control={form.control}
@@ -190,4 +195,4 @@ const AddExperienceModal = ({
   );
 };
 
-export default AddExperienceModal;
+export default EducationModal;

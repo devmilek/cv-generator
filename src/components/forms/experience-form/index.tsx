@@ -2,6 +2,7 @@
 
 import AddExperienceModal from "@/components/modals/add-experience-modal";
 import { Button } from "@/components/ui/button";
+import MonthPicker from "@/components/ui/month-picker";
 import { useCVStore } from "@/stores/cv-store";
 import { format } from "date-fns";
 import { MoreVertical } from "lucide-react";
@@ -12,11 +13,11 @@ const ExperienceForm = () => {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Experience</h2>
-      <div className="gap-4 grid mb-4">
+      <div className="gap-2 grid mb-2">
         {experience.map((entry) => (
           <div
             key={entry.id}
-            className="space-y-1 border rounded p-3 flex items-center gap-4"
+            className="space-y-1 border rounded-md p-3 flex items-center gap-4"
           >
             <div className="flex-1">
               <h3 className="font-semibold">
@@ -28,7 +29,7 @@ const ExperienceForm = () => {
               </p>
             </div>
             <AddExperienceModal data={entry}>
-              <Button variant="ghost">
+              <Button variant="ghost" size="icon">
                 <MoreVertical />
               </Button>
             </AddExperienceModal>
@@ -38,6 +39,7 @@ const ExperienceForm = () => {
       <AddExperienceModal>
         <Button variant="outline">Add item</Button>
       </AddExperienceModal>
+      <MonthPicker currentMonth={new Date()} onMonthChange={() => {}} />
     </div>
   );
 };

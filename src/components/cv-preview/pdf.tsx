@@ -19,7 +19,7 @@ const PdfExample = () => {
     <div
       style={{
         width: "595px",
-        height: "842px",
+        minHeight: "842px",
       }}
       className={cn(font.className, "bg-white p-8")}
     >

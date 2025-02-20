@@ -8,7 +8,7 @@ import PdfExample from "./pdf";
 
 const CVPreview = () => {
   return (
-    <div className="relative size-full border-l">
+    <div className="relative size-full border-l drop-shadow-2xl">
       <TransformWrapper
         centerOnInit={true}
         smooth={true}

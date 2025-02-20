@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+export type Step = 'basic' | "summary" | 'experience' | 'education';
+
 export interface BasicsFormFields {
     imageSrc?: string
     firstName?: string
@@ -39,6 +41,7 @@ interface CVStore {
     basics: BasicsFormFields
     experience: ExperienceEntry[]
     education: EducationEntry[]
+    step: Step
     updateBasics: (data: Partial<BasicsFormFields>) => void
     resetBasics: () => void
     addExperience: (entry: ExperienceEntry) => void
@@ -49,6 +52,10 @@ interface CVStore {
     updateEducation: (id: string, data: Partial<EducationEntry>) => void
     deleteEducation: (id: string) => void
     resetEducation: () => void
+    updateStep: (step: Step) => void
+    resetStep: () => void
+    nextStep: () => void
+    previousStep: () => void
 }
 
 const initialBasics: BasicsFormFields = {
@@ -63,12 +70,15 @@ const initialBasics: BasicsFormFields = {
     city: ''
 }
 
+export const steps: Step[] = ['basic', 'summary', 'experience', 'education']
+
 export const useCVStore = create<CVStore>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             basics: initialBasics,
             experience: [],
             education: [],
+            step: 'basic',
             updateBasics: (data) =>
                 set((state) => ({
                     basics: { ...state.basics, ...data }
@@ -112,7 +122,27 @@ export const useCVStore = create<CVStore>()(
             resetEducation: () =>
                 set(() => ({
                     education: []
-                }))
+                })),
+            updateStep: (step) =>
+                set(() => ({
+                    step
+                })),
+            resetStep: () =>
+                set(() => ({
+                    step: 'basic'
+                })),
+            nextStep: () => {
+                const currentStep = get().step
+                const currentIndex = steps.indexOf(currentStep)
+                const nextIndex = Math.min(currentIndex + 1, steps.length - 1)
+                set({ step: steps[nextIndex] })
+            },
+            previousStep: () => {
+                const currentStep = get().step
+                const currentIndex = steps.indexOf(currentStep)
+                const prevIndex = Math.max(currentIndex - 1, 0)
+                set({ step: steps[prevIndex] })
+            }
         }),
         {
             name: 'cv-storage'
